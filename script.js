@@ -112,6 +112,6 @@ nav?.querySelectorAll('a').forEach((link) => {
     const name = document.querySelector('#customer-name').value.trim();
     const message = document.querySelector('#customer-message').value.trim();
     const body = `হ্যালো Samiya, আমি ${name}। ${message}`;
-    window.location.href = `sms:+${phoneNumber}?body=${encodeURIComponent(body)}`;
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(body)}`, '_blank', 'noopener,noreferrer');
   });
 });
