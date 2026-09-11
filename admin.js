@@ -51,7 +51,7 @@ function compressImage(file) {
     reader.onload = () => {
       const image = new Image();
       image.onload = () => {
-        const scale = Math.min(1, 800 / image.width, 800 / image.height);
+        const scale = Math.min(1, 600 / image.width, 600 / image.height);
         const canvas = document.createElement('canvas');
         canvas.width = Math.round(image.width * scale);
         canvas.height = Math.round(image.height * scale);
@@ -61,8 +61,8 @@ function compressImage(file) {
           return;
         }
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
-        const maxBytes = 700 * 1024;
-        for (const quality of [0.76, 0.64, 0.52, 0.4]) {
+        const maxBytes = 300 * 1024;
+        for (const quality of [0.7, 0.58, 0.46, 0.34, 0.24]) {
           const compressed = canvas.toDataURL('image/jpeg', quality);
           const bytes = Math.ceil((compressed.length - compressed.split(',')[0].length - 1) * 3 / 4);
           if (bytes <= maxBytes) {
