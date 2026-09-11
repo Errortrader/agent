@@ -1,5 +1,11 @@
 # OpenRouter Agent TUI
 
+## Website preview
+
+This repository also includes a standalone Craft Cake Benapole bakery website.
+Open `index.html` directly in a browser to preview it, or serve the repository
+with any static file server.
+
 A runnable TypeScript terminal agent for exploring and editing a repository with
 [`@openrouter/agent`](https://www.npmjs.com/package/@openrouter/agent). It streams
 model output as it arrives, displays tool activity, and persists each
