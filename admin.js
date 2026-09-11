@@ -9,7 +9,12 @@ const cakeError = document.querySelector('#cake-error');
 const cakesRef = db.collection('cakes');
 
 function showError(node, error) {
-  node.textContent = error?.message || 'কাজটি করা যায়নি। আবার চেষ্টা করুন।';
+  const messages = {
+    'permission-denied': 'আপনার admin login/session-এর অনুমতি নেই। Logout করে আবার login করুন।',
+    'resource-exhausted': 'ছবিটি অনেক বড়। আরও ছোট ছবি দিয়ে আবার চেষ্টা করুন।',
+    'unavailable': 'Firebase connection পাওয়া যায়নি। Internet check করে আবার চেষ্টা করুন।',
+  };
+  node.textContent = messages[error?.code] || error?.message || 'কাজটি করা যায়নি। আবার চেষ্টা করুন।';
 }
 
 auth.onAuthStateChanged((user) => {
@@ -38,16 +43,34 @@ document.querySelector('#logout').addEventListener('click', () => auth.signOut()
 
 function compressImage(file) {
   return new Promise((resolve, reject) => {
+    if (!file) {
+      reject(new Error('ছবিটি নির্বাচন করুন।'));
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       const image = new Image();
       image.onload = () => {
-        const scale = Math.min(1, 1000 / image.width);
+        const scale = Math.min(1, 800 / image.width, 800 / image.height);
         const canvas = document.createElement('canvas');
         canvas.width = Math.round(image.width * scale);
         canvas.height = Math.round(image.height * scale);
-        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', 0.82));
+        const context = canvas.getContext('2d');
+        if (!context) {
+          reject(new Error('ছবিটি process করা যায়নি।'));
+          return;
+        }
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const maxBytes = 700 * 1024;
+        for (const quality of [0.76, 0.64, 0.52, 0.4]) {
+          const compressed = canvas.toDataURL('image/jpeg', quality);
+          const bytes = Math.ceil((compressed.length - compressed.split(',')[0].length - 1) * 3 / 4);
+          if (bytes <= maxBytes) {
+            resolve(compressed);
+            return;
+          }
+        }
+        reject(new Error('ছবিটি অনেক বড়। ছোট resolution-এর ছবি দিন।'));
       };
       image.onerror = reject;
       image.src = reader.result;
