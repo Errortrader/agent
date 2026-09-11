@@ -1,0 +1,27 @@
+{
+  "name": "openrouter-agent-tui",
+  "version": "1.0.0",
+  "description": "A streaming terminal coding agent powered by OpenRouter",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "start": "tsx src/cli.ts",
+    "dev": "tsx watch src/cli.ts"
+  },
+  "keywords": [],
+  "author": "Errortrader",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@openrouter/agent": "^0.4.0",
+    "dotenv": "^16.4.7",
+    "glob": "^13.0.6",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "playwright": "^1.52.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
