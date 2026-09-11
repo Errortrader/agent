@@ -106,4 +106,12 @@ nav?.querySelectorAll('a').forEach((link) => {
     saveCakes(demoCakes);
     renderCakes();
   });
+
+  document.querySelector('#message-form')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const name = document.querySelector('#customer-name').value.trim();
+    const message = document.querySelector('#customer-message').value.trim();
+    const body = `হ্যালো Samiya, আমি ${name}। ${message}`;
+    window.location.href = `sms:+${phoneNumber}?body=${encodeURIComponent(body)}`;
+  });
 });
