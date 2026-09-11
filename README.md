@@ -6,6 +6,20 @@ This repository also includes a standalone Craft Cake Benapole bakery website.
 Open `index.html` directly in a browser to preview it, or serve the repository
 with any static file server.
 
+### Live admin setup
+
+The live site can use Firebase for owner-managed cakes:
+
+1. In Firebase Console, enable **Authentication > Sign-in method > Email/Password**
+   and create the owner's user account.
+2. Create a Firestore database, then publish the rules from `firestore.rules`.
+3. Open `/admin.html` on the deployed site and sign in with that Firebase user.
+4. Add a cake image, name, details, and price. The public menu listens for live
+   Firestore updates.
+
+The Firebase web configuration is public client configuration, not a password.
+Do not add service-account private keys or other secrets to this static site.
+
 A runnable TypeScript terminal agent for exploring and editing a repository with
 [`@openrouter/agent`](https://www.npmjs.com/package/@openrouter/agent). It streams
 model output as it arrives, displays tool activity, and persists each

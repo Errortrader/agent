@@ -13,8 +13,10 @@ const cakeForm = document.querySelector('#cake-form');
 const imageInput = document.querySelector('#cake-image-input');
 const savedCakes = document.querySelector('#saved-cakes');
 const storageKey = 'craft-cake-benapole-menu';
+let liveCakes = null;
 
 function getCakes() {
+  if (liveCakes) return liveCakes;
   try {
     return JSON.parse(localStorage.getItem(storageKey)) || demoCakes;
   } catch {
@@ -45,6 +47,18 @@ function renderCakes() {
         next.splice(Number(button.dataset.remove), 1);
         saveCakes(next);
         renderCakes();
+
+        if (window.firebase && window.CAKE_FIREBASE_CONFIG) {
+          try {
+            firebase.initializeApp(window.CAKE_FIREBASE_CONFIG);
+            firebase.firestore().collection('cakes').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+              liveCakes = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+              if (liveCakes.length) renderCakes();
+            });
+          } catch (error) {
+            console.warn('Live menu unavailable; using demo menu.', error);
+          }
+        }
       });
     });
   }
